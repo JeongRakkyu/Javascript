@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <input type="text" id="stone">
+        <button onclick="omokk()">좌표 입력</button>
+        <p id="output"></p>
+        <script>
+            var s_cnt = 0;
+            var stone = "";
+            //배열 설정//
+            var omok = [];
+                for(var i = 0; i < 16; i++) {
+                omok[i] = [" □ ", " □ ", " □ ", " □ ", " □ ", " □ ", " □ ", " □ ", " □ ", " □ ", " □ ", " □ ", " □ ", " □ ", " □ ", " □ <br>"];
+                }
+
+            function omokk() {
+                //좌표 변수 : coordinate(인풋창 string), x(행좌표), y(열좌표)//
+                var coordinate = document.getElementById("stone").value;
+                var x = parseInt(coordinate.charAt(0));
+                var y = parseInt(coordinate.charAt(2) + coordinate.charAt(3));
+                var x2 = x;                                             //승리판별시 사용될 x임시저장변수//
+                var y2 = y;                                             //승리판별시 사용될 y임시저장변수//
+
+                //중복좌표 입력 방지//
+                if (omok[x][y] === stone) {
+                    window.alert(stone + "과 동일한 위치입니다. 다시 좌표를 입력해주세요.")
+                } else {
+                    if (s_cnt % 2 === 0) {
+                        stone = " ● ";
+                    } else {
+                        stone = " ○ ";
+                    }
+                    omok[x][y] = stone;                                     //돌 입력//
+                    s_cnt++;
+                }
+                //중복좌표 입력 방지 종료//
+
+                var output = "";
+                for(var row = 0; row < 16; row++) {
+                    for(var col = 0; col < 16; col++) {
+                        output = output + omok[row][col];
+                    }
+                }
+                document.getElementById("output").innerHTML = output;
+
+                while(true) {
+                    var cnt_win_1 = 0;
+                    var cnt_win_2 = 0;
+                    var cnt_win_3 = 0;
+                    var cnt_win_4 = 0;
+                    var cnt_3x3_1 = 0;
+                    var cnt_3x3_2 = 0;
+                    var cnt_3x3_3 = 0;
+                    var cnt_3x3_4 = 0;
+                    //상하 승리확인//
+                    for(var i = 1; i < 16; i++) {
+                        x2--;
+                        if(x - i < 0) {
+                            break;
+                        } else {
+                            if(omok[x][y] === omok[x - i][y]) {
+                                win_cnt++;
+                                cnt_3x3_1++;
+                            } else {
+                                break;
+                            }
+                        }
+                    }
+
+                    x2 = x;                                                  //원래 위치와 비교하기위해 초기화//
+
+                    for(var i = 1; i < 16; i++) {
+                        x2++;
+                        if(x + i > 15) {
+                            break;
+                        } else {
+                            if(omok[x][y] === omok[x + i][y]) {
+                                win_cnt++;
+                                cnt_3x3_1++;
+                            } else {
+                                break;
+                            }
+                        }
+                    }
+
+                    x2 = x;
+
+                    if(win_cnt === 4) {
+                        window.alert(stone + "WIN!");
+                        document.getElementById("stone").innerHTML = "Game Set";
+                        break;
+                    } else {
+                        win_cnt = 0;
+                    }
+
+                    //좌우 승리확인//
+                    for(var i = 1; i < 16; i++) {
+                        y2--;
+                        if(y - i < 0) {
+                            break;
+                        } else {
+                            if(omok[x][y] === omok[x][y - i]) {
+                                win_cnt++;
+                                cnt_3x3_2++;
+                            } else {
+                                break;
+                            }
+                        }
+                    }
+                    
+                    y2 = y;
+
+                    for(var i = 1; i < 16; i++) {
+                        y2++;
+                        if(y + i > 15) {
+                            break;
+                        } else {
+                            if(omok[x][y] === omok[x][y + i]) {
+                                win_cnt++;
+                                cnt_3x3_2++;
+                            } else {
+                                break;
+                            }
+                        }
+                    }
+
+                    y2 = y;
+
+                    if(win_cnt === 4) {
+                        window.alert(stone + "WIN!");
+                        break;
+                    } else {
+                        win_cnt = 0;
+                    }
+
+                    //좌상우하 승리확인//
+                    for(var i = 1; i < 16; i++) {
+                        x2--;
+                        y2--;
+                        if(x - i < 0 || y - i < 0) {
+                            break;
+                        } else {
+                            if(omok[x][y] === omok[x - i][y - i]) {
+                                win_cnt++;
+                                cnt_3x3_3++;
+                            } else {
+                                break;
+                            }
+                        }
+                    }
+                    
+                    x2 = x;
+                    y2 = y;
+
+                    for(var i = 1; i < 16; i++) {
+                        x2++;
+                        y2++;
+                        if(x + i > 15 || y + i > 15) {
+                            break;
+                        } else {
+                            if(omok[x][y] === omok[x + i][y + i]) {
+                                win_cnt++;
+                                cnt_3x3_3++;
+                            } else {
+                                break;
+                            }
+                        }
+                    }
+
+                    x2 = x;
+                    y2 = y;
+
+                    if(win_cnt === 4) {
+                        window.alert(stone + "WIN!");
+                        break;
+                    } else {
+                        win_cnt = 0;
+                    }
+
+                    //우상좌하 승리확인//
+                    for(var i = 1; i < 16; i++) {
+                        x2--;
+                        y2++;
+                        if(x - i < 0 || y + i > 15) {
+                            break;
+                        } else {
+                            if(omok[x][y] === omok[x - i][y + i]) {
+                                win_cnt++;
+                                cnt_3x3_4++;
+                            } else {
+                                break;
+                            }
+                        }
+                    }
+
+                    x2 = x;
+                    y2 = y;
+
+                    for(var i = 1; i < 16; i++) {
+                        x2++;
+                        y2--;
+                        if(x + i > 15 || y - i < 0) {
+                            break;
+                        } else {
+                            if(omok[x][y] === omok[x + i][y - i]) {
+                                win_cnt++;
+                                cnt_3x3_1++;
+                            } else {
+                                break;
+                            }
+                        }
+                    }
+
+                    if(win_cnt === 4) {
+                        window.alert(stone + "WIN!");
+                        break;
+                    } else {
+                        win_cnt = 0;
+                    }
+                    break;
+                }
+            }
+
+        </script>
+    </body>
+</html>
