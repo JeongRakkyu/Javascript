@@ -1,72 +1,151 @@
 //append structure
-var console_structure = ['<style>',
-'#console_container{position:fixed; box-sizing:border-box; padding:40px; background-color:rgb(222, 204, 255); width:100%; height:500px; bottom:0; left:0; right:0;}',
-'#button_container {width:100%; background-color:rgb(255, 213, 220); overflow:hidden;}',
-'.console_button{float:left; border:none; outline:none; background-color:rgb(253, 147, 147); color:rgb(252, 245, 188); padding:6px 10px; font-size:3vw;}',
-'#console_Element {background-color:rgb(255, 241, 220); width:100%; height:88%; overflow:auto; display:none; font-size:3vw;}',
-'#console_Console{background-color:rgb(255, 241, 220); width:100%; height:58%; overflow:auto; display:block; font-size:3vw;}',
-'#console_Console p{margin:0;}',
-'#log_container{background-color:rgb(255, 241, 220); width:100%; height:30%; overflow:auto; display:block;}',
-'#console_input{border:none; float:left; display:block; width:100%; height:3vw; font-size:3vw;}',
-'#console_log{display:block; float:left; font-size:3vw;}',
-'</style>',
-'<div id="console_container">',
-'<div id="button_container">',
-'<button class="console_button" onclick="console_Console()">Console</button><button class="console_button" onclick="console_Element()">Element</button>',
-'</div>',
-'<div id="console_Element">html object</div>',
-'<div id="console_Console">Has no ‘Javascript’ error.</div>',
-'<div id="log_container"><input id="console_input" type="text" onkeypress="if(event.keyCode == 13) {console_log()}"><div id="console_log"></div></div>',
-'</div>']
-var create_div = document.createElement("div");
-create_div.innerHTML = console_structure.join('');
-document.body.appendChild(create_div);
+var ecmbStructure = ['',
+    '            <div id="ecmb_ButtonContainer">',
+    '                <button id="ecmb_ErrorButton" onclick="errorButton()">Error</button>',
+    '                <button id="ecmb_CommandLineButton" onclick="commandLineButton()">Command Line</button>',
+    '                <button id="ecmb_ElementsButton" onclick="elementsButton(); elements();">Elements</button>',
+    '                <button id="ecmb_ContainerControlButton" onclick="containerControlButton()">_</button>',
+    '            </div>',
+    '            <div id="ecmb_WindowContainer">',
+    '                <div id="ecmb_ErrorWindow">',
+    '                    Has no ‘Javascript’ error.',
+    '                </div>',
+    '                <div id="ecmb_CommandLineWindow">',
+    '                    <input id="ecmb_CommandLineInput" type="text" onkeypress="if(event.keyCode == 13) {consoleLog()}">',
+    '                    <div id="ecmb_CommandLineOutput"></div>',
+    '                </div>',
+    '                <div id="ecmb_ElementsWindow">',
+    '                    <pre id="elements"></pre>',
+    '                </div>',
+    '            </div>'];
+var ecmbContainer = document.createElement("div");
+ecmbContainer.id = "ecmb_Container";
+ecmbContainer.innerHTML = ecmbStructure.join('\n');
+document.body.appendChild(ecmbContainer);
+
+//ecmb
+var ecmb = {
+    head: document.getElementsByTagName('head')[0].outerHTML.split('\n'),
+    body: document.getElementsByTagName('body')[0].outerHTML.split('\n'),
+
+    //error window control
+    err: document.getElementById("ecmb_ErrorWindow"),
+    errorButton: document.getElementById("ecmb_ErrorButton"),
+    err_Open: function () {
+        this.err.style.display = "block";
+        this.errorButton.style.backgroundColor = "black";
+        this.errorButton.style.color = "white";
+    },
+    err_Close: function () {
+        this.err.style.display = "none";
+        this.errorButton.style.backgroundColor = "white";
+        this.errorButton.style.color = "black";
+    },
+
+    //commandline window control
+    cmd: document.getElementById("ecmb_CommandLineWindow"),
+    cmdButton: document.getElementById("ecmb_CommandLineButton"),
+    cmd_Open: function () {
+        this.cmd.style.display = "block";
+        this.cmdButton.style.backgroundColor = "black";
+        this.cmdButton.style.color = "white";
+    },
+    cmd_Close: function () {
+        this.cmd.style.display = "none";
+        this.cmdButton.style.backgroundColor = "white";
+        this.cmdButton.style.color = "black";
+    },
+
+    //elements window control
+    ele: document.getElementById("ecmb_ElementsWindow"),
+    eleButton: document.getElementById("ecmb_ElementsButton"),
+    ele_Open: function () {
+        this.ele.style.display = "block";
+        this.eleButton.style.backgroundColor = "black";
+        this.eleButton.style.color = "white";
+    },
+
+    ele_Close: function () {
+        this.ele.style.display = "none";
+        this.eleButton.style.backgroundColor = "white";
+        this.eleButton.style.color = "black";
+    },
+
+    //container control
+    container: document.getElementById("ecmb_WindowContainer"),
+    onOffButton: document.getElementById("ecmb_ContainerControlButton"),
+    containerUp: function () {
+        this.onOffButton.style.backgroundColor = "black";
+        this.onOffButton.style.color = "white";
+        this.onOffButton.innerHTML = "_";
+        this.container.style.height = "233px";
+    },
+
+    containerDown: function () {
+        this.onOffButton.style.backgroundColor = "white";
+        this.onOffButton.style.color = "black";
+        this.onOffButton.innerHTML = "□";
+        this.container.style.height = "0";
+    },
+
+    controlSwitch: 1
+}
 
 //check error
-var error_message = '';
-onerror = function handleErr(msg, url, line, col) {
-    error_message += '<p>Error Message : <span style="color:red;">' + msg + '</span></p>';
-    error_message += '<p>Location : <span style="color:red;">' + url + '</span></p>';
-    error_message += '<p>Line : <span style="color:red;">' + line + '</span></p>';
-    error_message += '<p>Column : <span style="color:red;">' + col + '</span></p><br>';
-    document.getElementById("console_Console").innerHTML = error_message;
+onerror = function errorHandle(msg, url, line, col) {
+    var errorMessage = '';
+    errorMessage += '<p>Error Message : <span style="color:red;">' + msg + '</span></p>';
+    errorMessage += '<p>Location : <span style="color:red;">' + url + '</span></p>';
+    errorMessage += '<p>Line : <span style="color:red;">' + line + '</span></p>';
+    errorMessage += '<p>Column : <span style="color:red;">' + col + '</span></p><br>';
+    document.getElementById("ecmb_ErrorWindow").innerHTML = errorMessage;
     return true;
 }
 
 //button control
-var con_con = document.getElementById("console_Console");
-var con_input = document.getElementById("log_container");
-var con_ele = document.getElementById("console_Element");
-var con_sw = 1;
-var con_sw2 = 1;
-var ele_sw = 0;
-
-function console_Console() {
-    if (ele_sw === 1) {
-        con_ele.style.display = "none";
-        ele_sw = 0;
-        con_con.style.display = "block";
-        con_sw = 1;
-        con_input.style.display = "block";
-        con_sw2 = 1;
-    }
+function errorButton() {
+    ecmb.err_Open();
+    ecmb.cmd_Close();
+    ecmb.ele_Close();
 }
-
-function console_Element() {
-    if (con_sw === 1) {
-        con_con.style.display = "none";
-        con_sw = 0;
-        con_input.style.display = "none";
-        con_sw2 = 0;
-        con_ele.style.display = "block";
-        ele_sw = 1;
+function commandLineButton() {
+    ecmb.err_Close();
+    ecmb.cmd_Open();
+    ecmb.ele_Close();
+}
+function elementsButton() {
+    ecmb.err_Close();
+    ecmb.cmd_Close();
+    ecmb.ele_Open();
+}
+function containerControlButton() {
+    if (ecmb.controlSwitch === 1) {
+        ecmb.containerDown();
+        ecmb.controlSwitch = 0;
+    } else {
+        ecmb.containerUp();
+        ecmb.controlSwitch = 1;
     }
 }
 
 //log function
-function console_log(){
-    var log_value = document.getElementById("console_input").value;
-    var log_function = new Function('return ' + log_value)();
-    var print = document.getElementById("console_log");
-    print.innerText = log_function;
+function consoleLog() {
+    var inputValue = document.getElementById("ecmb_CommandLineInput").value;
+    var commandLine = new Function('return ' + inputValue)();
+    var outputLog = document.getElementById("ecmb_CommandLineOutput");
+    outputLog.innerText = commandLine;
+}
+
+//elements
+function elements() {
+    if (document.getElementById("elements").innerText === '') {
+        ecmb.head[0] = "    <head>";
+        ecmb.head.unshift("<html>");
+        ecmb.head.unshift("<!DOCTYPE html>");
+        ecmb.body[0] = "    <body>";
+        ecmb.body[ecmb.body.length - 1] = ecmb.body[ecmb.body.length - 1].split("</body>").join('');
+        ecmb.body.push("    </body>");
+        ecmb.body.push("</html>");
+        document.getElementById("elements").innerText = ecmb.head.join('\n') + "\n" + ecmb.body.join('\n');
+    }
 }
