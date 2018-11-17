@@ -1,0 +1,82 @@
+@charset "UTF-8";
+
+#ecmb_Container{
+    display: block;
+    position: fixed;
+    box-sizing: border-box;
+    width: 100%;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 9999;
+}
+#ecmb_ButtonContainer {
+    float: left;
+    margin-left: 5%;
+}
+#ecmb_ButtonContainer button {
+    float: left;
+    border: 1px solid black;
+    border-bottom: none;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 10px;
+    outline: none;
+    height: 30px;
+    text-align: center;
+}
+#ecmb_ErrorButton {
+    background-color: black;
+    color: white;
+    width: 70px;
+}
+#ecmb_CommandLineButton {
+    background-color: white;
+    color: black;
+    width: 125px;
+}
+#ecmb_ElementsButton {
+    background-color: white;
+    color: black;
+    width: 85px;
+}
+#ecmb_ContainerControlButton {
+    background-color: black;
+    color: white;
+    width: 50px;
+}
+#ecmb_WindowContainer {
+    display: block;
+    height: 233px;
+    transition: 1.5s;
+}
+#ecmb_WindowContainer > div {
+    border: 1px solid black;
+    background-color: white;
+    color: black;
+    width: 90%;
+    margin: auto;
+    overflow: auto;
+}
+#ecmb_ErrorWindow {
+    display: block;
+    height: 200px;
+}
+#ecmb_CommandLineWindow {
+    display: none;
+    height: 200px;
+}
+#ecmb_CommandLineInput {
+    border: none;
+    border-bottom: 3px double gray;
+    outline: none;
+    width: 100%;
+    height: 20px;
+}
+#ecmb_CommandLineOutput {
+    width: 100%;
+    height: 172px;
+}
+#ecmb_ElementsWindow {
+    display: none;
+    height: 200px;
+}
